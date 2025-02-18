@@ -160,63 +160,47 @@ bool Unit::isDead() {
     return hp <= 0;
 }
 
-void drawScene(char p_action, int p, char m_action, int m) {
-    cout << "                                                       \n";
-    
-    if (p_action == 'A') {
-        cout << "                                       " << -p << "\n";
-    } else {
-        cout << "                                                       \n";	
-    }
-    
-    cout << "                                *               *      \n";
-    cout << "                                *  ********  **      \n";
-    cout << "                                **         **      \n";
-    
-    if (m_action == 'A') {
-        cout << "                 " << setw(5) << -m << "           *\n"
-             << "                        *   *\n"
-             << "                        *       Attack!\n";
-    } else if (m_action == 'G') {
-        cout << "                                 *\n"
-             << "                        *   *\n"
-             << "                        *       Guard!\n";
-    } else if (m_action == 'D') {
-        cout << "                                 *\n"
-             << "                        *   *\n"
-             << "                        *       Dodge!\n";
-    } else if (m_action == 'U') {
-        cout << "                 " << setw(5) << -m << "           *\n"
-             << "                        *   *\n"
-             << "                        *       Ultimate Attack!\n";
-    } else {
-        cout << "                                 *\n"
-             << "                        *   *\n"
-             << "                        *\n";
-    }
-    
-    cout << "                                  * *   * *        \n";
-    cout << "                   *             *         *         \n";
-    
-    if (p_action == 'A') {
-        cout << "        Attack!    *  *           *******          \n";		
-    } else if (p_action == 'H') {
-        cout << "      Heal! +" << setw(2) << p << "    *  *           *******          \n";
-    } else if (p_action == 'G') {
-        cout << "         Guard!    *  *           *******          \n";
-    } else if (p_action == 'D') {
-        cout << "         Dodge!    *  *           *******          \n";
-    } else {
-        cout << "                   *  *           *******          \n";	
-    }
-    
-    cout << "                    *  *       *  *  *  *            \n";
-    cout << "                  ***           **   *   *           \n";
-    cout << "                    *                  *    *        \n";
-    cout << "                   * *               **        *       \n";
-    cout << "                  *   *                                \n";
-    cout << "                                                       \n";
-}
+void drawScene(char p_action,int p,char m_action,int m){
+	cout << "                                                       \n";
+	if(p_action == 'A'){
+	cout << "                                       "<< -p <<"\n";
+	}else{
+	cout << "                                                       \n";	
+	}	
+	cout << "                                *               *      \n";
+	cout << "                                **  *********  **      \n";
+	cout << "                                ****         ****      \n";
+	if(m_action == 'A'){
+	cout << "                 " << setw(5) << -m << "           *** **   ** ***       Attack!\n";
+	}else if(m_action == 'G'){
+	cout << "                                 *** **   ** ***       Guard!\n";
+	}else if(m_action == 'D'){
+	cout << "                                 *** **   ** ***       Dodge!\n";
+	}else if(m_action == 'U'){
+	cout << "                 " << setw(5) << -m << "           *** **   ** ***       Ultimate Attack!\n";
+	}else{
+	cout << "                                 *** **   ** ***       \n";	
+	}
+	cout << "                                  ** **   ** **        \n";
+	cout << "                   ***             *         *         \n";
+	if(p_action == 'A'){
+	cout << "        Attack!    ***  *           *********          \n";		
+	}else if(p_action == 'H'){
+	cout << "      Heal! +" << setw(2) << p << "    ***  *           *********          \n";
+	}else if(p_action == 'G'){
+	cout << "         Guard!    ***  *           *********          \n";
+	}else if(p_action == 'D'){
+	cout << "         Dodge!    ***  *           *********          \n";
+	}else{
+	cout << "                   ***  *           *********          \n";	
+	}
+	cout << "                    *  *       ***  *  *  *            \n";
+	cout << "                  *****           **   *   *           \n";
+	cout << "                    *                  *    ***        \n";
+	cout << "                   * *               **        *       \n";
+	cout << "                  *   *                                \n";
+	cout << "                                                       \n";
+};
 
 void playerWin() {	
     cout << "*******************************************************\n";
@@ -234,4 +218,69 @@ void playerLose() {
     cout << "*                   YOU LOSE!!!                       *\n";
     cout << "*                                                     *\n";
     cout << "*******************************************************\n";
+}
+int main() {
+    srand(time(0));  
+
+    Unit hero("Hero", "HeroName");
+    Unit monster("Monster", "MonsterName");
+
+    hero.showStatus();
+    monster.showStatus();
+
+    char playerAction, monsterAction;
+    int damageToMonster, damageToHero;
+
+    while (!hero.isDead() && !monster.isDead()) {
+        cout << "Select action: A for Attack, H for Heal, G for Guard, D for Dodge\n";
+        cin >> playerAction;
+
+        int monsterChoice = rand() % 4;
+        if (monsterChoice == 0) {
+            monsterAction = 'A';
+        } else if (monsterChoice == 1) {
+            monsterAction = 'G';
+        } else if (monsterChoice == 2) {
+            monsterAction = 'D';
+        } else {
+            monsterAction = 'U';
+        }
+
+        if (playerAction == 'A') {
+            damageToMonster = hero.attack(monster);
+        } else if (playerAction == 'H') {
+            damageToMonster = hero.heal();
+        } else if (playerAction == 'G') {
+            hero.guard();
+            damageToMonster = 0;
+        } else if (playerAction == 'D') {
+            hero.dodge();
+            damageToMonster = 0;
+        }
+
+        if (monsterAction == 'A') {
+            damageToHero = monster.attack(hero);
+        } else if (monsterAction == 'G') {
+            monster.guard();
+            damageToHero = 0;
+        } else if (monsterAction == 'D') {
+            monster.dodge();
+            damageToHero = 0;
+        } else if (monsterAction == 'U') {
+            damageToHero = monster.ultimateAttack(hero);
+        }
+
+        drawScene(playerAction, damageToMonster, monsterAction, damageToHero);
+
+        hero.showStatus();
+        monster.showStatus();
+    }
+
+    if (hero.isDead()) {
+        playerLose();
+    } else {
+        playerWin();
+    }
+
+    return 0;
 }
